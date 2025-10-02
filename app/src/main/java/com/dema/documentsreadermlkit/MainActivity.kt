@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.FileProvider
@@ -38,6 +40,13 @@ class MainActivity : AppCompatActivity() {
     private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()) {
         getTextByImage(imageUri)
     }
+
+    private val contractGallery =
+        registerForActivityResult(PickVisualMedia()) { uri ->
+            uri?.let {
+                getTextByImage(uri)
+            }
+        }
 
     private val tag = javaClass.name
 
@@ -92,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun takeFromGallery() {
-
+        contractGallery.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
     private fun showDialogChooseOptionGetImage() {
